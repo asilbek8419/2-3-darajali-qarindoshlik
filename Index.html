@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная - Расчёт вероятностей родства</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('img/Fon.webp');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px 40px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        .link {
+            display: block;
+            margin: 15px 0;
+            font-size: 18px;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: #4CAF50;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .link:hover {
+            background: #45a049;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .login-form input {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-form button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .login-form button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="login-container">
+        <h1>Вход</h1>
+        <form class="login-form">
+            <input type="text" id="username" placeholder="Логин" required>
+            <input type="password" id="password" placeholder="Пароль" required>
+            <button type="button" onclick="login()">Войти</button>
+        </form>
+    </div>
+
+    <div class="container" id="main-container" style="display: none;">
+        <h1>Расчёт вероятностей родства</h1>
+        <a href="hisoblash/Sibling.html" class="link">Провести расчёт вероятности родства (Сибсы)</a>
+        <a href="hisoblash/GrandFM.html" class="link">Провести расчёт вероятности родства (Бабушка/Дедушка -
+            Внук/Внучка)</a>
+    </div>
+
+    <script>
+        const loginData = [
+            { username: "admin", password: "1234" },
+            { username: "user1", password: "abcd" },
+            { username: "user2", password: "xyz123" }
+        ];
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Проверка существования пользователя
+            const user = loginData.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-container').style.display = 'block';
+            } else {
+                alert('Неверный логин или пароль!');
+            }
+        }
+    </script>
+</body>
+
+</html>
