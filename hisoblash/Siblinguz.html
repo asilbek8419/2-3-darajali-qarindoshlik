@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qarindoshlik ehtimolligini hisoblash - birodarlar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .results {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        const alleleFrequencies = {
+            "AMEL": {
+                "X": 1,
+                "Y": 1
+            },
+            "Amel": {
+                "X": 1,
+                "Y": 1
+            },
+            "D3S1358": {
+                "8.3": 0.0004,
+                "11": 0.0007,
+                "12": 0.0004,
+                "13": 0.0020,
+                "14": 0.0605,
+                "15": 0.3304,
+                "16": 0.2713,
+                "17": 0.2163,
+                "18": 0.1109,
+                "19": 0.0078
+            },
+            "D1S1656": {
+                "8": 0.0004,
+                "9": 0.0013,
+                "10": 0.0094,
+                "11": 0.0939,
+                "12": 0.0932,
+                "13": 0.0797,
+                "14": 0.0923,
+                "14.3": 0.0004,
+                "15": 0.2125,
+                "15.3": 0.0267,
+                "16": 0.1777,
+                "16.3": 0.0280,
+                "17": 0.0706,
+                "17.3": 0.0605,
+                "18": 0.0058,
+                "18.3": 0.0386,
+                "19": 0.0007,
+                "19.3": 0.0090
+
+            },
+            "D2S441": {
+                "9": 0.0013,
+                "9.1": 0.0036,
+                "10": 0.2317,
+                "11": 0.4049,
+                "11.3": 0.0409,
+                "12": 0.0768,
+                "12.3": 0.0026,
+                "13": 0.0232,
+                "14": 0.1861,
+                "15": 0.0264,
+                "16": 0.0029
+            },
+            "D10S1248": {
+                "8": 0.0004,
+                "11": 0.0036,
+                "12": 0.0348,
+                "13": 0.2456,
+                "14": 0.2921,
+                "15": 0.2276,
+                "16": 0.1569,
+                "17": 0.0351,
+                "18": 0.0045
+            },
+            "D13S317": {
+                "8": 0.1771,
+                "9": 0.1112,
+                "10": 0.1096,
+                "11": 0.2758,
+                "12": 0.2346,
+                "13": 0.0740,
+                "14": 0.0180
+            },
+            "Penta E": {
+                "5": 0.0531,
+                "6": 0.0004,
+                "7": 0.0778,
+                "8": 0.0116,
+                "9": 0.0126,
+                "10": 0.0711,
+                "11": 0.1119,
+                "12": 0.1199,
+                "13": 0.0916,
+                "14": 0.0675,
+                "15": 0.0899,
+                "16": 0.0743,
+                "16.4": 0.0013,
+                "17": 0.0634,
+                "17.4": 0.0004,
+                "18": 0.0576,
+                "19": 0.0421,
+                "19.4": 0.0004,
+                "20": 0.0193,
+                "21": 0.0148,
+                "22": 0.0129,
+                "23": 0.0049,
+                "24": 0.0013,
+                "24.2": 0.0007,
+                "26": 0.0004
+            },
+            "D16S539": {
+                "8": 0.0245,
+                "9": 0.1768,
+                "9.3": 0.0013,
+                "10": 0.1196,
+                "11": 0.2742,
+                "11.3": 0.0004,
+                "12": 0.2449,
+                "13": 0.1379,
+                "14": 0.0187,
+                "15": 0.0020,
+                "16": 0.0004
+            },
+            "D18S51": {
+                "9": 0.0017,
+                "9.2": 0.0004,
+                "10": 0.0052,
+                "11": 0.0145,
+                "12": 0.0768,
+                "12.3": 0.0004,
+                "13": 0.1466,
+                "13.1": 0.0010,
+                "14": 0.2038,
+                "15": 0.1639,
+                "16": 0.1292,
+                "17": 0.0942,
+                "18": 0.0605,
+                "19": 0.0428,
+                "20": 0.0277,
+                "21": 0.0142,
+                "22": 0.0094,
+                "23": 0.0042,
+                "24": 0.0029,
+                "24.2": 0.0010,
+                "27": 0.0006
+            },
+            "D2S1338": {
+                "13": 0.0010,
+                "15": 0.0004,
+                "16": 0.0158,
+                "17": 0.1206,
+                "18": 0.1103,
+                "19": 0.1575,
+                "20": 0.1302,
+                "21": 0.0254,
+                "22": 0.0376,
+                "23": 0.1810,
+                "24": 0.1151,
+                "25": 0.0778,
+                "26": 0.0219,
+                "27": 0.0039,
+                "28": 0.0023
+            },
+            "CSF1PO": {
+                "7": 0.0017,
+                "8": 0.0020,
+                "9": 0.0312,
+                "10": 0.2439,
+                "11": 0.3040,
+                "12": 0.3313,
+                "13": 0.0765,
+                "14": 0.0078,
+                "15": 0.0020
+            },
+            "Penta D": {
+                "2.2": 0.0013,
+                "6": 0.0148,
+                "7": 0.0058,
+                "8": 0.0123,
+                "9": 0.2449,
+                "10": 0.1443,
+                "11": 0.2057,
+                "12": 0.1360,
+                "13": 0.1472,
+                "13.3": 0.0007,
+                "13.4": 0.0004,
+                "14": 0.0540,
+                "15": 0.0219,
+                "16": 0.0090,
+                "17": 0.0023
+            },
+            "TH01": {
+                "6": 0.2443,
+                "6.1": 0.0007,
+                "7": 0.2092,
+                "8": 0.0990,
+                "8.3": 0.0004,
+                "9": 0.2497,
+                "9.3": 0.1880,
+                "10": 0.0087,
+                "11": 0.0004
+            },
+            "vWA": {
+                "13": 0.0074,
+                "14": 0.126,
+                "15": 0.079,
+                "15.2": 0.0004,
+                "16": 0.2195,
+                "17": 0.2754,
+                "18": 0.1945,
+                "19": 0.0852,
+                "20": 0.0142,
+                "21": 0.0004,
+                "24": 0.0004
+            },
+            "D21S11": {
+                "25": 0.0004,
+                "26": 0.002,
+                "27": 0.0161,
+                "28": 0.1254,
+                "28.2": 0.0029,
+                "29": 0.2157,
+                "29.1": 0.0007,
+                "29.2": 0.0036,
+                "29.3": 0.0004,
+                "30": 0.2590,
+                "30.2": 0.0242,
+                "30.3": 0.0004,
+                "31": 0.0743,
+                "31.2": 0.0920,
+                "31.3": 0.0007,
+                "32": 0.0107,
+                "32.2": 0.1199,
+                "33": 0.0010,
+                "33.2": 0.0460,
+                "34.1": 0.0004,
+                "34.2": 0.0049,
+                "35.2": 0.0007
+            },
+            "D7S820": {
+                "7": 0.0180,
+                "8": 0.2044,
+                "9": 0.0939,
+                "10": 0.2253,
+                "11": 0.2478,
+                "11.1": 0.0013,
+                "12": 0.1749,
+                "13": 0.0335,
+                "14": 0.0013
+            },
+            "D5S818": {
+                "7": 0.0116,
+                "8": 0.0010,
+                "9": 0.0617,
+                "10": 0.1186,
+                "11": 0.3558,
+                "12": 0.3095,
+                "13": 0.1312,
+                "14": 0.0099,
+                "15": 0.0007,
+                "16": 0.0004
+            },
+            "TPOX": {
+                "6": 0.0004,
+                "7": 0.0026,
+                "8": 0.5370,
+                "9": 0.0990,
+                "10": 0.0579,
+                "11": 0.2571,
+                "12": 0.0450,
+                "13": 0.0010,
+                "14": 0.0004
+            },
+            "D8S1179": {
+                "8": 0.0081,
+                "9": 0.0094,
+                "10": 0.0932,
+                "11": 0.0717,
+                "12": 0.1173,
+                "13": 0.2899,
+                "13.3": 0.0010,
+                "14": 0.2141,
+                "15": 0.1360,
+                "16": 0.0505,
+                "17": 0.0071,
+                "18": 0.0023
+            },
+            "D12S391": {
+                "14": 0.0004,
+                "15": 0.0126,
+                "16": 0.0126,
+                "17": 0.1312,
+                "17.3": 0.0126,
+                "18": 0.2089,
+                "18.3": 0.0145,
+                "19": 0.1639,
+                "19.3": 0.0062,
+                "20": 0.1488,
+                "20.3": 0.0004,
+                "21": 0.0923,
+                "22": 0.0990,
+                "23": 0.0547,
+                "24": 0.0235,
+                "25": 0.0116,
+                "26": 0.0058,
+                "27": 0.0020
+            },
+            "D19S433": {
+                "6.2": 0.0012,
+                "10": 0.0004,
+                "11": 0.0062,
+                "11.2": 0.0004,
+                "12": 0.0624,
+                "12.2": 0.0045,
+                "13": 0.2417,
+                "13.2": 0.0325,
+                "14": 0.2867,
+                "14.2": 0.0608,
+                "15": 0.1083,
+                "15.2": 0.1122,
+                "16": 0.0380,
+                "16.2": 0.0315,
+                "17": 0.0071,
+                "17.2": 0.0052,
+                "18": 0.0007,
+                "18.2": 0.0010
+            },
+            "D6S1043": {
+                "9": 0.0010,
+                "10": 0.0219,
+                "11": 0.2597,
+                "12": 0.2096,
+                "13": 0.0858,
+                "14": 0.0926,
+                "15": 0.0113,
+                "16": 0.0039,
+                "17": 0.0428,
+                "18": 0.1132,
+                "19": 0.1077,
+                "20": 0.0431,
+                "21": 0.0045,
+                "21.3": 0.0017,
+                "22": 0.0013,
+                "22.3": 0.0007
+            },
+            "D22S1045": {
+                "8": 0.0004,
+                "9": 0.0004,
+                "10": 0.0017,
+                "11": 0.2378,
+                "12": 0.0074,
+                "13": 0.0029,
+                "14": 0.0585,
+                "15": 0.3040,
+                "16": 0.2581,
+                "17": 0.1119,
+                "18": 0.0132,
+                "19": 0.0042
+            },
+            "FGA": {
+                "17": 0.0026,
+                "18": 0.0129,
+                "19": 0.0479,
+                "19.2": 0.0010,
+                "20": 0.0849,
+                "20.2": 0.0020,
+                "21": 0.1347,
+                "21.2": 0.0045,
+                "22": 0.1681,
+                "22.2": 0.0097,
+                "23": 0.1835,
+                "23.2": 0.0052,
+                "23.3": 0.0004,
+                "24": 0.1864,
+                "24.2": 0.0029,
+                "25": 0.1019,
+                "25.2": 0.0007,
+                "26": 0.0441,
+                "27": 0.0058,
+                "28": 0.0010,
+                "30": 0.0006
+            }
+        }
+
+        function getFrequency(marker, allele) {
+            return alleleFrequencies[marker]?.[allele] || 0;
+        }
+
+        function siblingsFD(marker, al1, al2, als1, als2) {
+            const fr1 = this.getFrequency(marker, al1);
+            const fr2 = this.getFrequency(marker, al2);
+            const frs1 = this.getFrequency(marker, als1);
+            const frs2 = this.getFrequency(marker, als2);
+
+            if (fr1 === 0 || fr2 === 0 || frs1 === 0 || frs2 === 0 || fr1 === 1 || fr2 === 1 || frs1 === 1 || frs2 === 1) {
+                return 1;
+            }
+
+            // Проверка на случай aa - aa
+            if (al1 === al2 && als1 === als2 && al1 === als1) {
+                return 1;
+            }
+
+            // Проверка на случай aa - bb
+            if (al1 === al2 && als1 === als2 && al1 !== als1) {
+                return (2 * fr1 * frs1 * 2 * fr1 * frs1) / Math.pow(frs1 * (2 - frs1), 2);
+            }
+
+            // Проверка на случай aa - bc
+            if (al1 === al2 && als1 !== als2 && al1 !== als1 && al1 !== als2) {
+                return (2 * 2 * fr1 * frs1 * 2 * fr1 * frs2) / (2 * frs1 * (2 - frs1) * frs2 * (2 - frs2) - 2 * frs1 * frs2 * 2 * frs1 * frs2);
+            }
+
+            // Проверка на случай aa - ab
+            if (al1 === al2 && als1 !== als2 && al1 === als1) {
+                return (2 * fr1 * (2 - fr1) * 2 * fr1 * frs2 - 2 * fr1 * frs2 * 2 * fr1 * frs2) /
+                    (2 * fr1 * (2 - fr1) * frs2 * (2 - frs2) - 2 * fr1 * frs2 * 2 * fr1 * frs2);
+            }
+
+            // Проверка на случай aa - ba
+            if (al1 === al2 && als1 !== als2 && al1 === als2) {
+                return (2 * fr1 * (2 - fr1) * 2 * fr1 * frs1 - 2 * fr1 * frs1 * 2 * fr1 * frs1) /
+                    (2 * fr1 * (2 - fr1) * frs1 * (2 - frs1) - 2 * fr1 * frs1 * 2 * fr1 * frs1);
+            }
+
+            // Проверка на случай ab - ab
+            if (al1 !== al2 && als1 !== als2 && al1 === als1 && al2 === als2) {
+                return 1;
+            }
+
+            // Проверка на случай ab - cc
+            if (al1 !== al2 && als1 === als2 && al1 !== als1 && al2 !== als1) {
+                return (2 * 2 * fr1 * frs1 * 2 * fr2 * frs1) / Math.pow(frs1 * (2 - frs1), 2);
+            }
+
+            // Проверка на случай ab - cd
+            if (al1 !== al2 && als1 !== als2 && al1 !== als1 && al1 !== als2 && al2 !== als1 && al2 !== als2) {
+                return (2 * 2 * fr1 * frs1 * 2 * fr2 * frs2 + 2 * 2 * fr1 * frs2 * 2 * fr2 * frs1) /
+                    (2 * frs1 * (2 - frs1) * frs2 * (2 - frs2) - 2 * frs1 * frs2 * 2 * frs1 * frs2);
+            }
+
+            // Проверка на случай ab - aa
+            if (al1 !== al2 && als1 === als2 && al1 === als1) {
+                return (2 * fr1 * (2 - fr1) * 2 * fr1 * fr2 - 2 * fr1 * fr2 * 2 * fr1 * fr2) / Math.pow(fr1 * (2 - fr1), 2);
+            }
+
+            // Проверка на случай ba - aa
+            if (al1 !== al2 && als1 === als2 && al2 === als1) {
+                return (2 * fr2 * (2 - fr2) * 2 * fr2 * fr1 - 2 * fr2 * fr1 * 2 * fr2 * fr1) / Math.pow(fr2 * (2 - fr2), 2);
+            }
+
+            // Проверка на случай ab - ac
+            if (al1 !== al2 && als1 !== als2 && al1 === als1 && al2 !== als2) {
+                return (2 * fr1 * (2 - fr1) * 2 * fr2 * frs2 + 2 * 2 * fr1 * fr2 * 2 * fr1 * frs2) /
+                    (2 * fr1 * (2 - fr1) * frs2 * (2 - frs2) - 2 * fr1 * frs2 * 2 * fr1 * frs2);
+            }
+
+            // Проверка на случай ab - ca
+            if (al1 !== al2 && als1 !== als2 && al1 === als2 && al2 !== als1) {
+                return (2 * fr1 * (2 - fr1) * 2 * fr2 * frs1 + 2 * 2 * fr1 * fr2 * 2 * fr1 * frs1) /
+                    (2 * fr1 * (2 - fr1) * frs1 * (2 - frs1) - 2 * fr1 * frs1 * 2 * fr1 * frs1);
+            }
+
+            // Проверка на случай ba - ac
+            if (al1 !== al2 && als1 !== als2 && al2 === als1 && al1 !== als2) {
+                return (2 * fr2 * (2 - fr2) * 2 * fr1 * frs2 + 2 * 2 * fr2 * fr1 * 2 * fr2 * frs2) /
+                    (2 * fr2 * (2 - fr2) * frs2 * (2 - frs2) - 2 * fr2 * frs2 * 2 * fr2 * frs2);
+            }
+
+            // Проверка на случай ba - ca
+            if (al1 !== al2 && als1 !== als2 && al2 === als2 && al1 !== als1) {
+                return (2 * fr2 * (2 - fr2) * 2 * fr1 * frs1 + 2 * 2 * fr2 * fr1 * 2 * fr2 * frs1) /
+                    (2 * fr2 * (2 - fr2) * frs1 * (2 - frs1) - 2 * fr2 * frs1 * 2 * fr2 * frs1);
+            }
+
+            // Если ни одно из условий не выполнено, возвращается 0
+            return 0;
+        }
+
+
+        function siblingsFD_F(al1, al2, als1, als2) {
+            // Проверка на случай aa - aa
+            if (al1 === al2 && als1 === als2 && al1 === als1) {
+                return "-";
+            }
+
+            // Проверка на случай aa - bb
+            if (al1 === al2 && als1 === als2 && al1 !== als1) {
+                return `((2 * p${al1} * p${als1})^2) / (p${als1} * (2 - p${als1}))^2`;
+            }
+
+            // Проверка на случай aa - bc
+            if (al1 === al2 && als1 !== als2 && al1 !== als1 && al1 !== als2) {
+                return `(2 * 2 * p${al1} * p${als1} * 2 * p${al1} * p${als2}) / (2 * p${als1} * (2 - p${als1}) * p${als2} * (2 - p${als2}) - 2 * p${als1} * p${als2} * 2 * p${als1} * p${als2})`;
+            }
+
+            // Проверка на случай aa - ab
+            if (al1 === al2 && als1 !== als2 && al1 === als1) {
+                return `(2 * p${al1} * (2 - p${al1}) * 2 * p${al1} * p${als2} - 2 * p${al1} * p${als2} * 2 * p${al1} * p${als2}) / (2 * p${al1} * (2 - p${al1}) * p${als2} * (2 - p${als2}) - 2 * p${al1} * p${als2} * 2 * p${al1} * p${als2})`;
+            }
+
+            // Проверка на случай aa - ba
+            if (al1 === al2 && als1 !== als2 && al1 === als2) {
+                return `(2 * p${al1} * (2 - p${al1}) * 2 * p${al1} * p${als1} - 2 * p${al1} * p${als1} * 2 * p${al1} * p${als1}) / (2 * p${al1} * (2 - p${al1}) * p${als1} * (2 - p${als1}) - 2 * p${al1} * p${als1} * 2 * p${al1} * p${als1})`;
+            }
+
+            // Проверка на случай ab - ab
+            if (al1 !== al2 && als1 !== als2 && al1 === als1 && al2 === als2) {
+                return "-";
+            }
+
+            // Проверка на случай ab - cc
+            if (al1 !== al2 && als1 === als2 && al1 !== als1 && al2 !== als1) {
+                return `(2 * 2 * p${al1} * p${als1} * 2 * p${al2} * p${als1}) / (p${als1} * (2 - p${als1}))^2`;
+            }
+
+            // Проверка на случай ab - cd
+            if (al1 !== al2 && als1 !== als2 && al1 !== als1 && al1 !== als2 && al2 !== als1 && al2 !== als2) {
+                return `(2 * 2 * p${al1} * p${als1} * 2 * p${al2} * p${als2} + 2 * 2 * p${al1} * p${als2} * 2 * p${al2} * p${als1}) / (2 * p${als1} * (2 - p${als1}) * p${als2} * (2 - p${als2}) - 2 * p${als1} * p${als2} * 2 * p${als1} * p${als2})`;
+            }
+
+            // Проверка на случай ab - aa
+            if (al1 !== al2 && als1 === als2 && al1 === als1) {
+                return `(2 * p${al1} * (2 - p${al1}) * 2 * p${al1} * p${al2} - 2 * p${al1} * p${al2} * 2 * p${al1} * p${al2}) / (p${al1} * (2 - p${al1}))^2`;
+            }
+
+            // Проверка на случай ba - aa
+            if (al1 !== al2 && als1 === als2 && al2 === als1) {
+                return `(2 * p${al2} * (2 - p${al2}) * 2 * p${al2} * p${al1} - 2 * p${al2} * p${al1} * 2 * p${al2} * p${al1}) / (p${al2} * (2 - p${al2}))^2`;
+            }
+
+            // Проверка на случай ab - ac
+            if (al1 !== al2 && als1 !== als2 && al1 === als1 && al2 !== als2) {
+                return `(2 * p${al1} * (2 - p${al1}) * 2 * p${al2} * p${als2} + 2 * 2 * p${al1} * p${al2} * 2 * p${al1} * p${als2}) / (2 * p${al1} * (2 - p${al1}) * p${als2} * (2 - p${als2}) - 2 * p${al1} * p${als2} * 2 * p${al1} * p${als2})`;
+            }
+
+            // Проверка на случай ab - ca
+            if (al1 !== al2 && als1 !== als2 && al1 === als2 && al2 !== als1) {
+                return `(2 * p${al1} * (2 - p${al1}) * 2 * p${al2} * p${als1} + 2 * 2 * p${al1} * p${al2} * 2 * p${al1} * p${als1}) / (2 * p${al1} * (2 - p${al1}) * p${als1} * (2 - p${als1}) - 2 * p${al1} * p${als1} * 2 * p${al1} * p${als1})`;
+            }
+
+            // Проверка на случай ba - ac
+            if (al1 !== al2 && als1 !== als2 && al2 === als1 && al1 !== als2) {
+                return `(2 * p${al2} * (2 - p${al2}) * 2 * p${al1} * p${als2} + 2 * 2 * p${al2} * p${al1} * 2 * p${al2} * p${als2}) / (2 * p${al2} * (2 - p${al2}) * p${als2} * (2 - p${als2}) - 2 * p${al2} * p${als2} * 2 * p${al2} * p${als2})`;
+            }
+
+            // Проверка на случай ba - ca
+            if (al1 !== al2 && als1 !== als2 && al2 === als2 && al1 !== als1) {
+                return `(2 * p${al2} * (2 - p${al2}) * 2 * p${al1} * p${als1} + 2 * 2 * p${al2} * p${al1} * 2 * p${al2} * p${als1}) / (2 * p${al2} * (2 - p${al2}) * p${als1} * (2 - p${als1}) - 2 * p${al2} * p${als1} * 2 * p${al2} * p${als1})`;
+            }
+
+            // Если ни одно из условий не выполнено, возвращается "-"
+            return "-";
+        }
+
+
+        function siblingsRS(marker, al1, al2) {
+            const fr1 = getFrequency(marker, al1);
+            const fr2 = getFrequency(marker, al2);
+
+            if (fr1 === 0 || fr2 === 0 || fr1 === 1 || fr2 === 1) {
+                return 1;
+            }
+            if (al1 === al2) {
+                return Math.pow(fr1 * (2 - fr1), 2);
+            } else {
+                return 2 * fr1 * (2 - fr1) * fr2 * (2 - fr2) - 2 * fr1 * fr2 * 2 * fr1 * fr2;
+            }
+        }
+
+        function siblingsRS_F(al1, al2) {
+            if (al1 === al2) {
+                return `(p${al1} * (2 - p${al1}))^2`;
+            } else {
+                return `2 * p${al1} * (2 - p${al1}) * p${al2} * (2 - p${al2}) - 2 * p${al1} * p${al2} * 2 * p${al1} * p${al2}`;
+            }
+        }
+
+        let profiles = {};
+        let markers = [];
+
+        function parseFile(content) {
+            const lines = content.split("\n");
+            profiles = {};
+            markers = [];
+
+            for (const line of lines.slice(1)) {
+                const [sampleName, , marker, allele1, allele2] = line.split("\t");
+                if (marker && allele1) {
+                    if (!profiles[sampleName]) {
+                        profiles[sampleName] = [];
+                    }
+                    profiles[sampleName].push({ marker, allele1: allele1.trim(), allele2: allele2?.trim() || allele1.trim() });
+                    if (!markers.includes(marker)) {
+                        markers.push(marker);
+                    }
+                }
+            }
+            populateProfileSelect();
+            alert("Fayl muvaffaqqiyatli yuklandi. Ishlash uchun profilni tanlang.");
+        }
+
+        function populateProfileSelect() {
+            const profileSelect = document.getElementById("profile-select");
+            profileSelect.innerHTML = "<option value=''>Profilni tanlang</option>";
+
+            for (const profile in profiles) {
+                const option = document.createElement("option");
+                option.value = profile;
+                option.textContent = profile;
+                profileSelect.appendChild(option);
+            }
+        }
+
+        function loadFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => parseFile(e.target.result);
+                reader.readAsText(file);
+            } else {
+                alert("Fayl yuklashda hatolik bor.");
+            }
+        }
+
+        function fillMarkers() {
+            const resultTable = document.getElementById("resultTable");
+            resultTable.innerHTML = "";
+
+            markers.forEach(marker => {
+                const tr = document.createElement("tr");
+
+                const markerCell = document.createElement("td");
+                markerCell.textContent = marker;
+                tr.appendChild(markerCell);
+
+                for (let i = 0; i < 14; i++) {
+                    const td = document.createElement("td");
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    td.appendChild(input);
+                    tr.appendChild(td);
+                }
+
+                resultTable.appendChild(tr);
+            });
+
+            alert("Markerlar muvaffaqqiyatli yuklandi.");
+        }
+
+        function fillProfile(profileName, isSibling) {
+            if (!profileName) {
+                alert("Profilni tanlang.");
+                return;
+            }
+
+            const data = profiles[profileName];
+            if (!data) {
+                alert("Profil topilmadi.");
+                return;
+            }
+
+            const rows = document.querySelectorAll("#resultTable tr");
+
+            rows.forEach(row => {
+                const marker = row.cells[0]?.textContent;
+                if (!marker) return;
+
+                const profileData = data.find(d => d.marker === marker);
+
+                if (profileData) {
+                    const allele1Cell = isSibling ? row.cells[3] : row.cells[1];
+                    const allele2Cell = isSibling ? row.cells[4] : row.cells[2];
+
+                    allele1Cell.querySelector("input").value = profileData.allele1;
+                    allele2Cell.querySelector("input").value = profileData.allele2;
+                }
+            });
+
+            alert(isSibling ? "aka/singil allellari yuklandi." : "tekshirilayongan allellari yuklandi.");
+        }
+
+        function calculateProbabilities() {
+            const rows = document.querySelectorAll("#resultTable tr");
+            let fdProduct = 1;
+            let rsProduct = 1;
+
+            rows.forEach(row => {
+                const cells = row.querySelectorAll("td input");
+                const marker = row.cells[0]?.textContent;
+                const al1 = cells[0]?.value;
+                const al2 = cells[1]?.value;
+                const als1 = cells[2]?.value;
+                const als2 = cells[3]?.value;
+
+                // Получение частот аллелей
+                const freq1 = getFrequency(marker, al1);
+                const freq2 = getFrequency(marker, al2);
+                const freqS1 = getFrequency(marker, als1);
+                const freqS2 = getFrequency(marker, als2);
+
+                // Заполнение частот
+                cells[4].value = freq1;
+                cells[5].value = freq2;
+                cells[6].value = freqS1;
+                cells[7].value = freqS2;
+
+                // Вычисление FD и RS вероятностей
+                const fd_f = siblingsFD_F(al1, al2, als1, als2);
+                const rs_f = siblingsRS_F(al1, al2);
+                const fd = siblingsFD(marker, al1, al2, als1, als2);
+                const rs = siblingsRS(marker, al1, al2);
+
+                // Заполнение вероятностей
+                cells[8].value = fd_f;
+                cells[9].value = rs_f;
+                cells[10].value = fd;
+                cells[11].value = rs;
+
+                fdProduct *= fd;
+                rsProduct *= rs;
+            });
+
+            const lr = fdProduct / rsProduct;
+            const probability = (lr / (lr + 1)) * 100;
+
+            document.getElementById("results").innerHTML = `
+                LR (Likelihood Ratio): ${lr.toFixed(6)}<br>
+                Qarindoshlik ehtimollik darajasi: ${probability.toFixed(10)}%
+            `;
+
+            alert("Ehtimollik hisoblandi va natijalar yangilandi.");
+        }
+
+        window.onload = function () {
+            document.getElementById("fill-markers-btn").addEventListener("click", fillMarkers);
+            document.getElementById("fill-profile-btn").addEventListener("click", () => {
+                const profileName = document.getElementById("profile-select").value;
+                fillProfile(profileName, false);
+            });
+            document.getElementById("fill-sibling-btn").addEventListener("click", () => {
+                const profileName = document.getElementById("profile-select").value;
+                fillProfile(profileName, true);
+            });
+            document.getElementById("calculate-btn").addEventListener("click", calculateProbabilities);
+        };
+    </script>
+</head>
+
+<body>
+    <a href="indexuz.html">Asosiy</a>
+    <h1>Qarindoshlik ehtimolligini hisoblash - birodarlar</h1>
+    <input type="file" accept=".txt" onchange="loadFile(event)" />
+    <select id="profile-select">
+        <option value="">Profilni tanlang</option>
+    </select>
+    <button id="fill-markers-btn">Markerlarni yuklash</button>
+    <button id="fill-profile-btn">Tekshiriluvchi profilini yuklash</button>
+    <button id="fill-sibling-btn">Tahmindagi aka/singil profilini yuklash</button>
+    <button id="calculate-btn">Ehtimollikni hisoblash</button>
+    <table>
+        <thead>
+            <tr>
+                <th>Marker</th>
+                <th>Allel1 tekshirilayotgan</th>
+                <th>Allel2 tekshirilayotgan</th>
+                <th>Allel1 aka/singil</th>
+                <th>Allel2 aka/singil</th>
+                <th>Chastota Allel1 tekshirilayotgan</th>
+                <th>Chastota Allel2 tekshirilayotgan</th>
+                <th>Chastota aka/singil 1</th>
+                <th>Chastota aka/singil 2</th>
+                <th>To'g'ri gipoteza formulasi</th>
+                <th>Teskari gipoteza formulasi</th>
+                <th>To'g'ri gipoteza ehtimolligi</th>
+                <th>Teskari gipoteza ehtimolligi</th>
+            </tr>
+        </thead>
+        <tbody id="resultTable">
+        </tbody>
+    </table>
+    <div id="results" class="results"></div>
+</body>
+
+</html>

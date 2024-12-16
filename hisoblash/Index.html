@@ -44,30 +44,6 @@
             transition: background 0.3s;
         }
 
-        .russian {
-            display: block;
-            margin: 15px 0;
-            font-size: 18px;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            background: blue;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .uzbek {
-            display: block;
-            margin: 15px 0;
-            font-size: 18px;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            background: brown;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
-
         .link:hover {
             background: #45a049;
         }
@@ -103,23 +79,27 @@
 </head>
 
 <body>
-    <a href="index.html" class="russian">Русский</a>
-    <a href="hisoblash/indexuz.html"class="uzbek">O'zbekcha</a>
+    <div class="container" id="language-selector">
+        <label for="language">Выберите язык:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="ru">Русский</option>
+            <option value="uz">O'zbekcha</option>
+        </select>
+    </div>
 
     <div class="container" id="login-container">
-        <h1>Вход</h1>
+        <h1 id="login-title">Вход</h1>
         <form class="login-form">
             <input type="text" id="username" placeholder="Логин" required>
             <input type="password" id="password" placeholder="Пароль" required>
-            <button type="button" onclick="login()">Войти</button>
+            <button type="button" id="login-button" onclick="login()">Войти</button>
         </form>
     </div>
 
     <div class="container" id="main-container" style="display: none;">
-        <h1>Расчёт вероятностей родства</h1>
-        <a href="hisoblash/Sibling.html" class="link">Провести расчёт вероятности родства (Сибсы)</a>
-        <a href="hisoblash/GrandFM.html" class="link">Провести расчёт вероятности родства (Бабушка/Дедушка -
-            Внук/Внучка)</a>
+        <h1 id="main-title">Расчёт вероятностей родства</h1>
+        <a href="hisoblash/Sibling.html?lang=uz" class="link" id="link-sibling">Провести расчёт вероятности родства (Сибсы)</a>
+<a href="hisoblash/GrandFM.html?lang=uz" class="link" id="link-grandfm">Провести расчёт вероятности родства (Бабушка/Дедушка - Внук/Внучка)</a>
     </div>
 
     <script>
@@ -129,11 +109,50 @@
             { username: "user2", password: "xyz123" }
         ];
 
+        const translations = {
+            ru: {
+                loginTitle: "Вход",
+                usernamePlaceholder: "Логин",
+                passwordPlaceholder: "Пароль",
+                loginButton: "Kirish",
+                : "Войти",
+                mainTitle: "Расчёт вероятностей родства",
+                linkSibling: "Провести расчёт вероятности родства (Сибсы)",
+                linkGrandFM: "Провести расчёт вероятности родства (Бабушка/Дедушка - Внук/Внучка)"
+            },
+            uz: {
+                loginTitle: "Kirish",
+                usernamePlaceholder: "Login",
+                passwordPlaceholder: "Parol",
+                loginButton: "Kirish",
+                mainTitle: "Qarindoshlik ehtimolini hisoblash",
+                linkSibling: "Qarindoshlik ehtimolini hisoblash (Birodarlar)",
+                linkGrandFM: "Qarindoshlik ehtimolini hisoblash (Bobo/Buvi - Nabira)"
+            }
+        };
+
+        function changeLanguage() {
+            const language = document.getElementById('language').value;
+            localStorage.setItem('selectedLanguage', language); // Сохраняем язык
+            const texts = translations[language];
+
+            document.getElementById('login-title').innerText = texts.loginTitle;
+            document.getElementById('username').placeholder = texts.usernamePlaceholder;
+            document.getElementById('password').placeholder = texts.passwordPlaceholder;
+            document.getElementById('login-button').innerText = texts.loginButton;
+            document.getElementById('main-title').innerText = texts.mainTitle;
+            document.getElementById('link-sibling').innerText = texts.linkSibling;
+            document.getElementById('link-grandfm').innerText = texts.linkGrandFM;
+        }
+        window.onload = function () {
+            const language = localStorage.getItem('selectedLanguage') || 'ru'; // По умолчанию русский
+            document.getElementById('language').value = language;
+            changeLanguage();
+        }
         function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            // Проверка существования пользователя
             const user = loginData.find(user => user.username === username && user.password === password);
 
             if (user) {

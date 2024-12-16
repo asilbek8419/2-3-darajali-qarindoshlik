@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uz">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Главная - Расчёт вероятностей родства</title>
+    <title>Qarindoshlik ehtimolini hisoblash</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-image: url('img/Fon.webp');
+            background-image: url('../img/Fon.webp');
             background-size: cover;
             background-position: center;
             color: white;
@@ -43,7 +43,6 @@
             border-radius: 5px;
             transition: background 0.3s;
         }
-
         .russian {
             display: block;
             margin: 15px 0;
@@ -103,23 +102,22 @@
 </head>
 
 <body>
-    <a href="index.html" class="russian">Русский</a>
-    <a href="hisoblash/indexuz.html"class="uzbek">O'zbekcha</a>
+    <a href="../index.html" class="russian">Русский</a>
+    <a href="indexuz.html" class="uzbek">O'zbekcha</a>
 
     <div class="container" id="login-container">
-        <h1>Вход</h1>
+        <h1>Kirish</h1>
         <form class="login-form">
-            <input type="text" id="username" placeholder="Логин" required>
-            <input type="password" id="password" placeholder="Пароль" required>
-            <button type="button" onclick="login()">Войти</button>
+            <input type="text" id="username" placeholder="Login" required>
+            <input type="password" id="password" placeholder="Parol" required>
+            <button type="button" onclick="login()">Kirish</button>
         </form>
     </div>
 
     <div class="container" id="main-container" style="display: none;">
         <h1>Расчёт вероятностей родства</h1>
-        <a href="hisoblash/Sibling.html" class="link">Провести расчёт вероятности родства (Сибсы)</a>
-        <a href="hisoblash/GrandFM.html" class="link">Провести расчёт вероятности родства (Бабушка/Дедушка -
-            Внук/Внучка)</a>
+        <a href="Siblinguz.html" class="link">Qarindoshlik ehtimolini hisoblash (Birodarlar)</a>
+        <a href="GrandFMuz.html" class="link">Qarindoshlik ehtimolini hisoblash (bobo/buvi - nabira)</a>
     </div>
 
     <script>
@@ -140,7 +138,7 @@
                 document.getElementById('login-container').style.display = 'none';
                 document.getElementById('main-container').style.display = 'block';
             } else {
-                alert('Неверный логин или пароль!');
+                alert('Login yoki parolda hatolik mavjud!');
             }
         }
     </script>
