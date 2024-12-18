@@ -5,7 +5,7 @@ FROM nginx:latest
 COPY . /usr/share/nginx/html
 
 # Открываем порт 80 для доступа
-EXPOSE 80
+EXPOSE 8080
 
 # Запускаем Nginx
 CMD ["nginx", "-g", "daemon off;"]
