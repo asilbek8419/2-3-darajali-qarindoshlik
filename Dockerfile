@@ -1,11 +1,11 @@
-# Используем базовый образ Nginx
+# Use the official NGINX image
 FROM nginx:latest
 
-# Копируем ВСЮ структуру проекта (включая подпапки) в папку Nginx
-COPY . /usr/share/nginx/html
+# Copy static website files to the NGINX html directory
+COPY ./2-3-darajali-qarindoshlik /usr/share/nginx/html
 
-# Открываем порт 80 для доступа
+# Expose port 80
 EXPOSE 80
 
-# Запускаем Nginx
+# Start NGINX server
 CMD ["nginx", "-g", "daemon off;"]
